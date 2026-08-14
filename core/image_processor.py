@@ -7,5 +7,33 @@ def cargar_imagen(ruta):
     image = Image.open(ruta)
     return image
 
+def obtener_dimensiones(imagen):
+    """
+    Obtener el ancho y alto de la imagen
+    """
+    return imagen.size
+
+def redimensionar_imagen(imagen, ancho, alto):
+    """
+    Redimensionar una imagen al tamaño indicado
+    """
+    return imagen.resize((ancho, alto))
+
+def reducir_colores(imagen, cantidad_colores):
+    """
+    Reducir la cantidad de colores de la imagen.
+    """
+    return imagen.quantize(colors=cantidad_colores)
+def obtener_colores(imagen):
+    """
+    Obtener los colores utilizados en la imagen
+    """
+    colores = imagen.getcolors(imagen.width * imagen.height)
+    return colores
+
+    
+    
+    
+
 
     
