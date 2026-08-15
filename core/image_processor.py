@@ -30,6 +30,13 @@ def obtener_colores(imagen):
     """
     colores = imagen.getcolors(imagen.width * imagen.height)
     return colores
+def obtener_color_pixel(imagen, x, y):
+    """
+    Obtiene el color de un pixel en una posicion determinada
+    """
+    return imagen.getpixel((x, y))
+
+    
 
     
     
