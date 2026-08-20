@@ -45,10 +45,7 @@ def obtener_color_rgb(imagen, x, y):
     """
     Obtiene el color RGB de un pixel
     """
-    pixel = imagen.getpixel((x, y))
-    return imagen.getpalette()[
-    pixel * 3: pixel * 3+3
-    ]
+    return imagen.getpixel((x, y))
 
 def obtener_paleta_rgb(imagen):
     """

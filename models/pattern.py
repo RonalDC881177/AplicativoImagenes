@@ -16,6 +16,9 @@ class Pattern:
         """
         Obtiene el índice de color de una casilla del patrón.
         """
+        if not self.posicion_valida(x, y):
+            raise ValueError("La posicion esta fuera de los limites del patron")
+
         return self.matriz_colores[y][x]
 
     @classmethod
@@ -30,14 +33,13 @@ class Pattern:
             crear_matriz_colores,
             obtener_paleta_rgb
         )
-        
+
         imagen = cargar_imagen(ruta)
         imagen = redimensionar_imagen(imagen, ancho, alto)
         imagen = reducir_colores(imagen, cantidad_colores)
-        
+
         matriz = crear_matriz_colores(imagen)
         paleta_rgb = obtener_paleta_rgb(imagen)
-        
 
         return cls(ancho, alto, matriz, paleta_rgb)
 
@@ -61,53 +63,103 @@ class Pattern:
                     conteo[indice] = 1
 
         return conteo
-    
+
     def cantidad_color(self, indice):
         """
-        Devuelve cuantas casillas utilizan un color especifico
+        Devuelve cuántas casillas utilizan un color específico.
         """
         conteo = self.contar_colores()
         return conteo.get(indice, 0)
-    
+
     def colores_utilizados(self):
         """
-        Devuelve los indices de los colores utilizados en el patron.
+        Devuelve los índices de los colores utilizados en el patrón.
         """
         conteo = self.contar_colores()
         return list(conteo.keys())
-    
+
     def obtener_color_rgb(self, indice):
         """
-        Devuelve el color RGB correspondiente a un indice.
+        Devuelve el color RGB correspondiente a un índice.
         """
         return self.paleta_rgb[indice]
-    
+
     def informacion_colores(self):
         """
-        Devuelve informacion basica de los colores utilizados.
+        Devuelve información básica de los colores utilizados.
         """
         colores = []
-        
+
         for indice in self.colores_utilizados():
             colores.append({
                 "indice": indice,
                 "rgb": self.obtener_color_rgb(indice),
                 "cantidad": self.cantidad_color(indice)
             })
+
         return colores
-    
+
     def informacion_casilla(self, x, y):
         """
-        Devuelve la informacion de una casilla del patron.
+        Devuelve la información de una casilla del patrón.
         """
-        
         indice = self.obtener_color(x, y)
         rgb = self.obtener_color_rgb(indice)
-        
-        return{
+
+        return {
             "x": x,
             "y": y,
             "indice": indice,
             "rgb": rgb
         }
-        
+
+    def obtener_fila(self, y):
+        """
+        Devuelve una fila completa del patrón.
+        """
+        return self.matriz_colores[y]
+
+    def obtener_columna(self, x):
+        """
+        Devuelve una columna completa del patrón.
+        """
+        columna = []
+
+        for y in range(self.alto):
+            columna.append(self.matriz_colores[y][x])
+
+        return columna
+
+    def posicion_valida(self, x, y):
+        """
+        Comprueba si una posición existe dentro del patrón.
+        """
+        return 0 <= x < self.ancho and 0 <= y < self.alto
+
+    def obtener_casilla(self, x, y):
+        """
+        Obtiene el color de una casilla del patrón.
+        """
+        if not self.posicion_valida(x, y):
+            return None
+
+        return self.matriz_colores[y][x]
+
+    def establecer_casilla(self, x, y, color_id):
+        """
+        Establece el color de una casilla del patrón.
+        """
+        if not self.posicion_valida(x, y):
+            return False
+
+        self.matriz_colores[y][x] = color_id
+        return True
+
+    def cantidad_por_color(self):
+        """
+        Devuelve la cantidad de casillas que utiliza cada color.
+        """
+        return self.contar_colores()
+    
+
+    
