@@ -1,7 +1,14 @@
 import sys
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
-from PySide6.QtWidgets import QFileDialog
+from PySide6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QPushButton,
+    QFileDialog,
+    QLabel
+)
+
+from models.pattern import Pattern
 
 
 class VentanaPrincipal(QMainWindow):
@@ -18,18 +25,38 @@ class VentanaPrincipal(QMainWindow):
         # Tamaño inicial de la ventana
         self.resize(1000, 700)
 
+        # Aquí guardaremos el patrón generado
+        self.patron = None
+
         # Botón para seleccionar una imagen
-        self.boton_seleccionar = QPushButton("Seleccionar imagen", self)
+        self.boton_seleccionar = QPushButton(
+            "Seleccionar imagen",
+            self
+        )
 
         # Posición y tamaño del botón
-        self.boton_seleccionar.setGeometry(20, 20, 180, 40)
+        self.boton_seleccionar.setGeometry(
+            20, 20, 180, 40
+        )
 
-        # Conectamos el botón con la función seleccionar_imagen
-        self.boton_seleccionar.clicked.connect(self.seleccionar_imagen)
+        # Conectamos el botón con la función
+        self.boton_seleccionar.clicked.connect(
+            self.seleccionar_imagen
+        )
+
+        # Texto para mostrar el estado
+        self.etiqueta_estado = QLabel(
+            "No se ha seleccionado ninguna imagen.",
+            self
+        )
+
+        self.etiqueta_estado.setGeometry(
+            20, 80, 500, 30
+        )
 
     def seleccionar_imagen(self):
         """
-        Abre una ventana para seleccionar una imagen.
+        Permite seleccionar una imagen y crear el patrón.
         """
 
         ruta, _ = QFileDialog.getOpenFileName(
@@ -39,9 +66,29 @@ class VentanaPrincipal(QMainWindow):
             "Imágenes (*.jpg *.jpeg *.png *.bmp)"
         )
 
-        # Comprobamos si el usuario seleccionó una imagen
-        if ruta:
-            print("Imagen seleccionada:", ruta)
+        # Si el usuario canceló la selección
+        if not ruta:
+            return
+
+        print("Imagen seleccionada:", ruta)
+
+        # Crear el patrón utilizando nuestro código existente
+        self.patron = Pattern.desde_imagen(
+            ruta,
+            50,
+            50,
+            20
+        )
+
+        # Mostrar información en la terminal
+        print("Patrón creado correctamente")
+        print("Total de casillas:", self.patron.total_casillas())
+        print("Colores utilizados:", self.patron.colores_utilizados())
+
+        # Actualizar el estado de la interfaz
+        self.etiqueta_estado.setText(
+            "Imagen procesada correctamente."
+        )
 
 
 # Punto de entrada de la aplicación
